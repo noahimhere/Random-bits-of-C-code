@@ -1,68 +1,57 @@
-#include <iostream>
-#include <vector>
-#include <queue>
+#include<stdio.h>
+#include<vector>
+#include<queue>
 
+#define LEN 1100
 using namespace std;
+int matrix[LEN][LEN], N, M, V, visit[LEN];
+vector<int> pathDfs, pathBfs;
+queue<int> Q;
 
-bool visited[9];
-vector<int> graph[9];
-
-
-void bfs(int start){
-    queue<int> q;
-    q.push(start);
-    visited[start] = true;
-    int smallest = 2147483640;
-
-
-    while(!q.empty()){
-        int x = q.front();
-        q.pop();
-        cout << x << ' ';
-        smallest = 2147483640;
-        // int y = graph[x][i];
-        for(int i = 0; i < graph[x].size(); i++){
-            if(!visited[graph[x][i]]){
-                smallest = graph[x][i];
-            }
+int dfs(int x) {
+    pathDfs.push_back(x);
+    visit[x] = 1;
+    int i;
+    for (i = 1; i <= N; i++) {
+        if (visit[i] == 0 && matrix[x][i] == 1) {
+            dfs(i);
         }
-        // if(!visited[smallest]){
-        //     q.push(smallest);
-        //     visited[smallest] = true;
-        // }
     }
+    return 0;
 }
 
+int main() {
+    int i, j, a, b;
+    scanf("%d %d %d", &N, &M, &V);
+    for (i = 0; i < M; i++) {
+        scanf("%d %d", &a, &b);
+        matrix[a][b] = 1;
+        matrix[b][a] = 1;
+    }
+    dfs(V);
+    for (i = 1; i <= N; i++) {
+        visit[i] = 0;
+    }
+    Q.push(V);
+    visit[V] = 1;
 
-int main(void){
-    graph[1].push_back(2);
-    graph[1].push_back(3);
-    graph[1].push_back(8);
-
-    graph[2].push_back(1);
-    graph[2].push_back(7);
-
-    graph[3].push_back(1);
-    graph[3].push_back(4);
-    graph[3].push_back(5);
-
-    graph[4].push_back(3);
-    graph[4].push_back(5);
-
-    graph[5].push_back(3);
-    graph[5].push_back(4);
-    
-
-    graph[6].push_back(7);
-
-    graph[7].push_back(2);
-    graph[7].push_back(6);
-    graph[7].push_back(8);
-
-
-    graph[8].push_back(1);
-    graph[8].push_back(7);
-
-
-    bfs(1);
+    while (!Q.empty()) {
+        int front = Q.front();
+        Q.pop();
+        pathBfs.push_back(front);
+        for (i = 1; i <= N; i++) {
+            if (matrix[front][i] == 1 && visit[i] == 0) {
+                Q.push(i);
+                visit[i] = 1;
+            }
+        }
+    }
+    for (i = 0; i < pathDfs.size(); i++) {
+        printf("%d ", pathDfs[i]);
+    }
+    printf("\n");
+    for (i = 0; i < pathBfs.size(); i++) {
+        printf("%d ", pathBfs[i]);
+    }
+    return 0;
 }
