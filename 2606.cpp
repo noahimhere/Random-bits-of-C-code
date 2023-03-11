@@ -1,51 +1,71 @@
-#include <C:\INCLUDE\stdc++.h>
+#include <bits/stdc++.h>
+#include <string>
 
 using namespace std;
 
-int visited[100] = {0,};
-vector<int> graph[100];
-
 int n;
 int m;
+int temp;
+bool infected[101];
+bool connected[101][101];
+int currentcounting = 0;
 int temp1;
-int temp2;
-int counting = 0;
+int maxi = 0;
+
+int qsize = 0;
 
 
-void bfs(int start){
+
+
+
+
+
+void bfs(int startc){
     queue<int> q;
-    q.push(start);
-    visited[start] = 1;
-
+    q.push(1);
+    infected[startc] = true;
+    
 
     while(!q.empty()){
-        int x = q.front();
+        
+        int comp = q.front();
+
         q.pop();
-        counting++;
-        for(int i = 1; i <= n; i++){
-            //int y = graph[x][i];
-            if(graph[x][i] == 1 && visited[i] == 0){
-                visited[i] = 1;
-                q.push(i);
+        for(int i = 0; i > maxi; i++){
+            if(infected[connected[comp][i]] != true){
+                q.push({connected[comp][i]});
+                infected[connected[comp][i]] = true;   
+                currentcounting++;
             }
             
         }
+            
+        
     }
-    
+    cout << currentcounting;
+
     
 }
+
+
 
 int main(){
     cin >> n;
     cin >> m;
-    for(int i = 0; i < m; i++){
+    int i;
+    for(i = 0; i < m; i++){
+        cin >> temp;
         cin >> temp1;
-        cin >> temp2;
-        graph[temp1].push_back(temp2);
-        graph[temp2].push_back(temp1);
+        if(temp > maxi){
+            maxi = temp;
+        }
+        if(temp1 > maxi){
+            maxi = temp1;
+        }
+        connected[temp][temp1] = true;
+        connected[temp1][temp] = true;
         
     }
     bfs(1);
-    cout << counting-1;
     
-}   
+}

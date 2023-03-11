@@ -1,66 +1,72 @@
-#include <C:\INCLUDE\stdc++.h>
+#include <bits/stdc++.h>
+#include <string>
 
 using namespace std;
 
 int n;
 int m;
-int temp;
+string temp;
 bool visited[101][101];
-vector<int> graph[9];
-int counting = 0;
+int graph[101][101];
+int steps[101][101];
+int currentcounting = 0;
 int temp2 = 1;
 int temp3;
+int qsize = 0;
+
+
+
+struct COORD{
+    int steps;
+    int x;
+    int y;
+};
+
 
 
 
 void bfs(int startx, int starty){
-    queue<pair<int, int>> q;
-    q.push(make_pair(startx, starty));
+    queue<COORD> q;
+    q.push({1,startx,starty});
     visited[startx][starty] = true;
+    currentcounting = q.back().steps;
     
 
     while(!q.empty()){
-        int x = q.front().first;
-        int y = q.front().second;
-        q.pop();
-        if(0 <= x <= m){
-            
-        }
         
-        for(int i = 0; i < graph[x].size(); i++){
-            int y = graph[x][i];
-            if(!visited[x][y]){
-                if(graph[x][y] == 1){
-                    if(graph[x][y + 1] == 1){
-                        counting++;
-                        q.push(make_pair(x, y));
-                        visited[x][y] = true;
-                    }
-                    else if(graph[x + 1][y] == 1){
-                        counting++;
-                        q.push(make_pair(x, y));
-                        visited[x][y] = true;
-                    }
-                    else if(y > 0){
-                        if(graph[x][y - 1] == 1){
-                            counting++;
-                            q.push(make_pair(x, y));
-                            visited[x][y] = true;
-                        }
-                    }
-                    else if(x > 0){
-                        if(graph[x - 1][y] == 1){
-                            counting++;
-                            q.push(make_pair(x, y));
-                            visited[x][y] = true;
-                        }
-                    }
-                    
-                }
+        int x = q.front().x;
+        int y = q.front().y;
+        int currentcounting = q.front().steps;
+
+        q.pop();
+        if(y+1<m && visited[x][y+1]!=true && graph[x][y + 1] == 1 ){
+            
+            q.push({currentcounting + 1, x, y+1});
+            visited[x][y+1] = true;    
+        }
+        if(x+1<n && visited[x+1][y]!=true && graph[x+1][y] == 1 ){
+            
+            q.push({currentcounting + 1, x+1, y});
+            visited[x+1][y] = true;    
+
+        }
+        if(y > 0 && visited[x][y-1]!=true && graph[x][y-1]==1) {
                 
-            }
+                q.push({currentcounting + 1, x, y-1});
+                visited[x][y-1] = true;
+                
+        }
+        if(x > 0 && visited[x-1][y]!=true && graph[x-1][y]==1){
+            
+                q.push({currentcounting + 1, x-1, y});
+                visited[x-1][y] = true;
+        }
+        if(q.front().x == n-1 && q.front().y == m-1){
+        cout << q.front().steps;
         }
     }
+
+    
 }
 
 
@@ -68,15 +74,13 @@ void bfs(int startx, int starty){
 int main(){
     cin >> n;
     cin >> m;
-    for(int i = 0; i < n; i++){
+    int i,j;
+    for(i = 0; i < n; i++){
         cin >> temp;
-        for(int j = 0; j < int(log10(temp) + 1); j++){
-            temp3 = temp / temp2 % 10;
-            temp2 * 10;
+        for(j=0;j<m;j++){
+            graph[i][j]=temp[j]-'0';
         }
-        graph[i].push_back(temp3);
-        temp2 = 1;
     }
-    bfs(n, m);
-    cout << counting;
+    bfs(0, 0);
+    
 }
