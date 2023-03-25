@@ -22,23 +22,27 @@ int qsize = 0;
 
 void bfs(int startc){
     queue<int> q;
-    q.push(1);
+    q.push(startc);
     infected[startc] = true;
     
 
     while(!q.empty()){
-        
         int comp = q.front();
-
         q.pop();
-        for(int i = 0; i > maxi; i++){
-            if(infected[connected[comp][i]] != true){
-                q.push({connected[comp][i]});
-                infected[connected[comp][i]] = true;   
+
+        
+        for(int i = 1; i < n + 1; i++){
+
+            if(connected[comp][i] == true && infected[i] != true){
+                q.push({i});
+                infected[i] = true;   
                 currentcounting++;
             }
             
+            
         }
+
+        
             
         
     }
@@ -56,14 +60,10 @@ int main(){
     for(i = 0; i < m; i++){
         cin >> temp;
         cin >> temp1;
-        if(temp > maxi){
-            maxi = temp;
-        }
-        if(temp1 > maxi){
-            maxi = temp1;
-        }
+
         connected[temp][temp1] = true;
         connected[temp1][temp] = true;
+        
         
     }
     bfs(1);
