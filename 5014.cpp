@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 #include <string>
-
+#include <ctime>
 using namespace std;
 
 
@@ -18,21 +18,26 @@ int qsize = 0;
 
 bool solved = false;
 
-int wentto[1000001];
-
 
 int usedamount = 0;
 
+bool visitcheck[1100000];
 
+queue<pair<int, int>> q;
 
 
 
 
 void bfs(int startc){
     
-    queue<pair<int, int>> q;
-    q.push(make_pair(startc, 0));
     
+
+
+    
+    q.push(make_pair(startc, 0));
+    visitcheck[startc] = true;
+
+
 
     while(!q.empty()){
         
@@ -40,35 +45,27 @@ void bfs(int startc){
         int elevm =  q.front().second;
         q.pop();
         if(floor == G){
-            solved = true;
-            cout << elevm;
-            break;
+                solved = true;
+                cout << elevm;
+                break;
         }
+        if(floor + U <= F && visitcheck[floor + U] == false){
+            q.push(make_pair(floor + U, elevm + 1));  
+            visitcheck[floor + U] = true;  
 
-        // if(floor < G && wentto[floor] != true){
-        //     q.push(make_pair(floor + U, elevm + 1));
-        //     wentto[floor] = true;
-
-        // }
-        // else if(floor > G && wentto[floor] != true){
-        //     q.push(make_pair(floor - D, elevm + 1));
-        //     wentto[floor] = true;
-        // }
-        // else if(floor == G){
-        //     solved = true;
-        //     cout << elevm;
-        //     break;
-
-        // }
-        // else{
-        //     cout << "use the stairs";
-        //     solved = true;
-        //     break;
-        // }
+        }
+        if(floor - D >= 1 && visitcheck[floor - D] == false){
+            q.push(make_pair(floor - D, elevm + 1));
+            visitcheck[floor - D] = true;  
+        }
 
         
             
         
+    }
+    if(solved == false){
+        cout << "use the stairs";
+        return;
     }
 
     
@@ -77,6 +74,7 @@ void bfs(int startc){
 
 
 int main(){
+    int i;
     cin >> F >> S >> G >> U >> D;
     bfs(S);
     
